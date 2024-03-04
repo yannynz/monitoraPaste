@@ -28,7 +28,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 # Pasta a ser monitorada
-# pasta_monitorada = "C:\organizaEntrega\mMonitoramento\teste"
+pasta_monitorada = "~\Downloads\monitoraPaste-main\monitoraPaste-main\teste"
 
 # Função para extrair dados do título do arquivo
 # Extrair dados do título do arquivo usando regex
@@ -45,8 +45,8 @@ def extrair_dados(arquivo):
         return None, None
 
 # Testar a função com um exemplo
-nome_arquivo = "NR508416SUTTO.txt"
-nr, cliente = extrair_dados(nome_arquivo)
+# nome_arquivo = "NR508416SUTTO.txt"
+# nr, cliente = extrair_dados(nome_arquivo)
 
 if nr and cliente:
     print(f"NR: {nr}")
@@ -55,28 +55,28 @@ else:
     print("Dados não encontrados no título do arquivo.")
 
 # Classe para manipular eventos da pasta monitorada
-# class ManipuladorEventos(FileSystemEventHandler):
-#     def on_created(self, event):
-#         # Verificar se o evento foi na pasta monitorada e se é um arquivo
-#         if event.src_path.startswith(pasta_monitorada) and os.path.isfile(event.src_path):
-#             # Extrair dados do título do arquivo
-#             nome_arquivo = os.path.basename(event.src_path)
-#             nr, cliente = extrair_dados(nome_arquivo)
-#             # Exibir dados em tempo real
-#             print(f"Novo arquivo detectado: {nome_arquivo}")
-#             print(f"NR: {nr}")
-#             print(f"Cliente: {cliente}")
-#             print("---")
+class ManipuladorEventos(FileSystemEventHandler):
+    def on_created(self, event):
+        # Verificar se o evento foi na pasta monitorada e se é um arquivo
+        if event.src_path.startswith(pasta_monitorada) and os.path.isfile(event.src_path):
+            # Extrair dados do título do arquivo
+            nome_arquivo = os.path.basename(event.src_path)
+            nr, cliente = extrair_dados(nome_arquivo)
+            # Exibir dados em tempo real
+            print(f"Novo arquivo detectado: {nome_arquivo}")
+            print(f"NR: {nr}")
+            print(f"Cliente: {cliente}")
+            print("---")
 
-# # Criar e iniciar observador da pasta
-# observer = Observer()
-# observer.schedule(ManipuladorEventos(), pasta_monitorada, recursive=True)
-# observer.start()
+# Criar e iniciar observador da pasta
+observer = Observer()
+observer.schedule(ManipuladorEventos(), pasta_monitorada, recursive=True)
+observer.start()
 
-# # Manter o script em execução
-# try:
-#     while True:
-#         time.sleep(1)
-# except KeyboardInterrupt:
-#     observer.stop()
-#     observer.join()
+# Manter o script em execução
+try:
+    while True:
+        time.sleep(1)
+except KeyboardInterrupt:
+    observer.stop()
+    observer.join()
